@@ -1,130 +1,86 @@
+# Libraries
+# from turtle import Screen
+from pydantic import conset
 import pygame
-import time
-import random
- 
+from regex import F
+from camera import *
+from map import *
+from screens import *
+from buttons import *
+from player import *
+# Constants
+SPEED = 0.3
+HIGH_SPEED = 0.6
+SCREEN_WIDTH = 1080
+SCREEN_HEIGHT = 720
+
+# Variables
+running = False
+
+
+# Meta-game
 pygame.init()
- 
-white = (255, 255, 255)
-yellow = (255, 255, 102)
-black = (0, 0, 0)
-red = (213, 50, 80)
-green = (0, 255, 0)
-blue = (50, 153, 213)
- 
-dis_width = 600
-dis_height = 400
- 
-dis = pygame.display.set_mode((dis_width, dis_height) , pygame.FULLSCREEN)
-pygame.display.set_caption('Snake Game by Edureka')
- 
-clock = pygame.time.Clock()
- 
-snake_block = 10
-snake_speed = 15
- 
-font_style = pygame.font.SysFont("bahnschrift", 25)
-score_font = pygame.font.SysFont("comicsansms", 35)
- 
- 
-def Your_score(score):
-    value = score_font.render("Your Score: " + str(score), True, yellow)
-    dis.blit(value, [0, 0])
- 
- 
- 
-def our_snake(snake_block, snake_list):
-    for x in snake_list:
-        pygame.draw.rect(dis, black, [x[0], x[1], snake_block, snake_block])
- 
- 
-def message(msg, color):
-    mesg = font_style.render(msg, True, color)
-    dis.blit(mesg, [dis_width / 6, dis_height / 3])
+dis_width = SCREEN_WIDTH
+dis_height = SCREEN_HEIGHT
+dis = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.update()
+pygame.display.set_caption('Stick Racing')
+dis.fill((255, 255, 255))
+screen = Screen()
 
-def our_character():
-    # draw circle at 0 , 0
-    pygame.draw.circle(dis, black, (round(dis_width / 2), round(dis_height / 2) ), radius= 60)
- 
-def gameLoop():
-    game_over = False
-    # game_close = False
- 
-    # x1 = dis_width / 2
-    # y1 = dis_height / 2
- 
-    # x1_change = 0
-    # y1_change = 0
- 
-    # snake_List = []
-    # Length_of_snake = 1
- 
-    # foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
-    # foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
+# Screen Flags
+screen.start_flag = False
 
-    while not game_over:
-        dis.fill(white)
-        our_character();
-        # while game_close == True:
-        #     message("You Lost! Press C-Play Again or Q-Quit", red)
-        #     Your_score(Length_of_snake - 1)
-        #     pygame.display.update()
- 
-        #     for event in pygame.event.get():
+
+# Map Creation
+# surface = Map().surface
+dis.blit(Map().surface, (0, 0))
+print(Map().surfaceCoordinates)
+Player(dis)
+
+# Camera
+camera = Camera(dis, Map().surface)
+
+# Main Screen
+game_over = False
+
+count = 0
+while not game_over:
+    count += SPEED
+    running = False
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_over = True
+        # if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        #     if screen.start_flag:
+        #         # text detection
+        #         if event.pos[0] > 759 and event.pos[0] < 959 and event.pos[1] > 203 and event.pos[1] < 253:
+        #             print('Join')
+        #             screen.join_flag = True
+        #             screen.start_flag = False
+        #             dis.blit(screen.join, (0, 0))
+
+        #         if event.pos[0] > 759 and event.pos[0] < 959 and event.pos[1] > 325.48 and event.pos[1] < 375.48:
+        #             print('Create')
+
+        #         if event.pos[0] > 759 and event.pos[0] < 959 and event.pos[1] > 447.97 and event.pos[1] < 497.97:
+        #             print('Exit')
+        #             game_over = True
+
         #         if event.type == pygame.KEYDOWN:
-        #             if event.key == pygame.K_q:
-        #                 game_over = True
-        #                 game_close = False
-        #             if event.key == pygame.K_c:
-        #                 gameLoop()
- 
-        # for event in pygame.event.get():
-        #     if event.type == pygame.QUIT:
-        #         game_over = True
-        #     if event.type == pygame.KEYDOWN:
-        #         if event.key == pygame.K_LEFT:
-        #             x1_change = -snake_block
-        #             y1_change = 0
-        #         elif event.key == pygame.K_RIGHT:
-        #             x1_change = snake_block
-        #             y1_change = 0
-        #         elif event.key == pygame.K_UP:
-        #             y1_change = -snake_block
-        #             x1_change = 0
-        #         elif event.key == pygame.K_DOWN:
-        #             y1_change = snake_block
-        #             x1_change = 0
- 
-        # if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
-        #     game_close = True
-        # x1 += x1_change
-        # y1 += y1_change
-        # dis.fill(blue)
-        # pygame.draw.rect(dis, green, [foodx, foody, snake_block, snake_block])
-        # snake_Head = []
-        # snake_Head.append(x1)
-        # snake_Head.append(y1)
-        # snake_List.append(snake_Head)
-        # if len(snake_List) > Length_of_snake:
-        #     del snake_List[0]
- 
-        # for x in snake_List[:-1]:
-        #     if x == snake_Head:
-        #         game_close = True
- 
-        # our_snake(snake_block, snake_List)
-        # Your_score(Length_of_snake - 1)
- 
-        pygame.display.update()
- 
-        # if x1 == foodx and y1 == foody:
-        #     foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
-        #     foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
-        #     Length_of_snake += 1
- 
-        clock.tick(snake_speed)
- 
-    pygame.quit()
-    quit()
- 
- 
-gameLoop()
+        #             if event.key == pygame.K_RIGHT:
+        #                 count += HIGH_SPEED
+        #                 camera.update(count, True)
+        #                 running = True
+        #                 print('Right')
+    if not running:
+        count += SPEED
+        camera.update(count, False)
+        print('Left')
+    print(camera.x, camera.y)
+    Player(dis)
+    pygame.display.update()
+
+
+pygame.quit()
+quit()
