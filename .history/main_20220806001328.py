@@ -1,0 +1,1 @@
+:resources:images/animated_characters/female_adventurer/femaleAdventurer_walk1.png
