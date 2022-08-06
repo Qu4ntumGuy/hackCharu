@@ -87,9 +87,7 @@ class MyGame(arcade.Window):
         counters = 1
         # Map creation
         for i in range(10):            
-            rand = random.randint(80 , 200)
-            # y_rand = counters
-            for o in range(10):
+            for o in range(10): 
                 countes = 1
                 for i in range(5):
                     wall = arcade.Sprite(":resources:images/tiles/grassCenter.png", SPRITE_SCALING)
@@ -97,17 +95,19 @@ class MyGame(arcade.Window):
                     wall.center_y = countes * GRID_PIXEL_SIZE
                     self.static_wall_list.append(wall)
                     countes += 1
-                y_heights = rand
+
+
+            rand = random.randint(100 , 200)
+            
             for j in range(rand):
                 wall = arcade.Sprite(":resources:images/tiles/sandMid.png", SPRITE_SCALING)
-                # wall.bottom = 20 * 
-                wall.center_x = (j)*random.randint(2,7)* GRID_PIXEL_SIZE 
-                # wall.center_y = y_heights
+                wall.center_x = (j)* GRID_PIXEL_SIZE + 100 
+               
                 self.static_wall_list.append(wall)
 
 
             # counters+=1
-            counter = counter*random.randint(2, 4)
+            # counter = counter*random.randint(2, 4)
         
         wall = arcade.Sprite(":resources:images/tiles/sandMid.png", SPRITE_SCALING)
         wall.center_y = 3 * GRID_PIXEL_SIZE
@@ -170,15 +170,15 @@ class MyGame(arcade.Window):
                 # time.sleep(1)
         # print()
         if ~self.speed_flag:
-            self.player_sprite.change_x = MOVEMENT_SPEED /8 
+            self.player_sprite.change_x = MOVEMENT_SPEED /5
         # if 
         self.x = self.player_sprite.center_x
         if self.Hand_Class.result != self.result_local:
             print(self.Hand_Class.result)
             self.result_local = self.Hand_Class.result
-            if self.Hand_Class.result == 2:
-                if self.physics_engine.can_jump():
-                    self.player_sprite.change_y = JUMP_SPEED
+           
+            if self.physics_engine.can_jump():
+                self.player_sprite.change_y = JUMP_SPEED
 
           
 

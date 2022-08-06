@@ -1,14 +1,11 @@
 # Libraries
-# from turtle import distance
+from turtle import distance
 import arcade
 from pyglet.math import Vec2
 import random
 import os
 from firebase_con import *
 from firebase_admin import db
-# import thread module
-import threading
-
 import sys
 import time
 from hand import *
@@ -33,18 +30,7 @@ class MyGame(arcade.Window):
     def __init__(self, width, height, title):
       
         super().__init__(width, height, title)
-        # thread.start_new_thread ( function, args[, kwargs] )
-    
-        # run the thread
-        self.Hand_Class = ThisClass()
-        self.thread = threading.Thread(target=self.Hand_Class.get_hand_position)
-        self.thread2 = threading.Thread(target=self.setup , args=(self))
-        self.thread.start()
-        self.thread2.start()
-        self.result_local = -1
-
-        # print(self.thread.join(), self.thread2.join())
-
+        thread.start_new_thread ( function, args[, kwargs] )
 
         # self.time_clock = clock()
         self.x = 0
@@ -168,18 +154,10 @@ class MyGame(arcade.Window):
         # if self.stop_movment:
             # for i in range(4):
                 # time.sleep(1)
-        # print()
-        if ~self.speed_flag:
-            self.player_sprite.change_x = MOVEMENT_SPEED /8 
-        # if 
-        self.x = self.player_sprite.center_x
-        if self.Hand_Class.result != self.result_local:
-            print(self.Hand_Class.result)
-            self.result_local = self.Hand_Class.result
-            if self.Hand_Class.result == 2:
-                if self.physics_engine.can_jump():
-                    self.player_sprite.change_y = JUMP_SPEED
 
+        if ~self.speed_flag:
+            self.player_sprite.change_x = MOVEMENT_SPEED /5
+        self.x = self.player_sprite.center_x
           
 
     def on_key_press(self, key, modifiers):
@@ -200,7 +178,7 @@ class MyGame(arcade.Window):
 
     def on_update(self, delta_time):
         distance = self.player_sprite.top
-        # print(distance)
+        print(distance)
 
        
         if(distance < -500):

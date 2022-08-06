@@ -1,17 +1,21 @@
 # Libraries
-# from turtle import distance
+from termios import CLOCAL
+from turtle import distance
 import arcade
 from pyglet.math import Vec2
 import random
 import os
 from firebase_con import *
 from firebase_admin import db
-# import thread module
-import threading
-
 import sys
 import time
-from hand import *
+
+import json
+from tkinter import E
+import cv2
+import cvzone
+from cvzone.HandTrackingModule import HandDetector
+import numpy as np
 
 # Constants
 SPRITE_SCALING = 0.5
@@ -33,20 +37,7 @@ class MyGame(arcade.Window):
     def __init__(self, width, height, title):
       
         super().__init__(width, height, title)
-        # thread.start_new_thread ( function, args[, kwargs] )
-    
-        # run the thread
-        self.Hand_Class = ThisClass()
-        self.thread = threading.Thread(target=self.Hand_Class.get_hand_position)
-        self.thread2 = threading.Thread(target=self.setup , args=(self))
-        self.thread.start()
-        self.thread2.start()
-        self.result_local = -1
-
-        # print(self.thread.join(), self.thread2.join())
-
-
-        # self.time_clock = clock()
+        self.time_clock = t
         self.x = 0
         self.static_wall_list = None
         self.moving_wall_list = None
@@ -168,18 +159,10 @@ class MyGame(arcade.Window):
         # if self.stop_movment:
             # for i in range(4):
                 # time.sleep(1)
-        # print()
-        if ~self.speed_flag:
-            self.player_sprite.change_x = MOVEMENT_SPEED /8 
-        # if 
-        self.x = self.player_sprite.center_x
-        if self.Hand_Class.result != self.result_local:
-            print(self.Hand_Class.result)
-            self.result_local = self.Hand_Class.result
-            if self.Hand_Class.result == 2:
-                if self.physics_engine.can_jump():
-                    self.player_sprite.change_y = JUMP_SPEED
 
+        if ~self.speed_flag:
+            self.player_sprite.change_x = MOVEMENT_SPEED /5
+        self.x = self.player_sprite.center_x
           
 
     def on_key_press(self, key, modifiers):
@@ -200,9 +183,7 @@ class MyGame(arcade.Window):
 
     def on_update(self, delta_time):
         distance = self.player_sprite.top
-        # print(distance)
-
-       
+        print(distance)
         if(distance < -500):
             self.game_over = True
             print("GAME OVER")
@@ -215,8 +196,6 @@ class MyGame(arcade.Window):
         self.physics_engine.update()
 
         self.scroll_to_player()
-
-        
 
     def scroll_to_player(self):
        
@@ -292,7 +271,7 @@ def join_room( name, room_id):
 ref = db.reference('/')
 
 if __name__ == "__main__":
-    main()
+    # main()
     print("Enter Your Name: ")
     name = input()
     # clear the terminal
@@ -318,3 +297,43 @@ if __name__ == "__main__":
 
     
 
+
+
+
+cap = cv2.VideoCapture(0)
+cap.set(3, 1280)
+cap.set(4, 720)
+
+detector = HandDetector(detectionCon=0.7, maxHands=1)
+
+
+
+while True:
+    _, img = cap.read()
+    img = cv2.flip(img, 1)
+
+    #Save values of diff hand data in hands obj..
+    hands, img = detector.findHands(img, flipType=False)
+
+
+    # Showing Video (only for temp)
+    # Will comment in future and resize it in diif size and put it at bottom-right corner.
+    cv2.imshow("Image", img)
+    key = cv2.waitKey(1)
+
+    hands, img = detector.findHands(img)
+    if hands:
+        hand = hands[0]
+        fingers = detector.fingersUp(hand)
+
+        if fingers == [1,1,1,1,1]:
+            print("Normal")
+            # return 0
+
+        if fingers == [0,0,0,0,0]:
+            print("Speed")
+            # return 1
+
+        if fingers == [1,1,0,0,0]:
+            print("Jump")
+            # return 2

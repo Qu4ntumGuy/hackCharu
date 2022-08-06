@@ -41,7 +41,7 @@ class MyGame(arcade.Window):
         self.thread2 = threading.Thread(target=self.setup , args=(self))
         self.thread.start()
         self.thread2.start()
-        self.result_local = -1
+        
 
         # print(self.thread.join(), self.thread2.join())
 
@@ -170,15 +170,11 @@ class MyGame(arcade.Window):
                 # time.sleep(1)
         # print()
         if ~self.speed_flag:
-            self.player_sprite.change_x = MOVEMENT_SPEED /8 
-        # if 
+            self.player_sprite.change_x = MOVEMENT_SPEED /5
         self.x = self.player_sprite.center_x
-        if self.Hand_Class.result != self.result_local:
-            print(self.Hand_Class.result)
-            self.result_local = self.Hand_Class.result
-            if self.Hand_Class.result == 2:
-                if self.physics_engine.can_jump():
-                    self.player_sprite.change_y = JUMP_SPEED
+        if self.Hand_Class.result == 2:
+            if self.physics_engine.can_jump():
+                self.player_sprite.change_y = JUMP_SPEED
 
           
 

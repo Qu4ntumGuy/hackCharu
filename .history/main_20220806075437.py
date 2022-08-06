@@ -87,7 +87,7 @@ class MyGame(arcade.Window):
         counters = 1
         # Map creation
         for i in range(10):            
-            rand = random.randint(80 , 200)
+            rand = random.randint(150 , 200)
             # y_rand = counters
             for o in range(10):
                 countes = 1
@@ -170,15 +170,15 @@ class MyGame(arcade.Window):
                 # time.sleep(1)
         # print()
         if ~self.speed_flag:
-            self.player_sprite.change_x = MOVEMENT_SPEED /8 
+            self.player_sprite.change_x = MOVEMENT_SPEED /5
         # if 
         self.x = self.player_sprite.center_x
         if self.Hand_Class.result != self.result_local:
             print(self.Hand_Class.result)
             self.result_local = self.Hand_Class.result
-            if self.Hand_Class.result == 2:
-                if self.physics_engine.can_jump():
-                    self.player_sprite.change_y = JUMP_SPEED
+           
+            if self.physics_engine.can_jump():
+                self.player_sprite.change_y = JUMP_SPEED
 
           
 

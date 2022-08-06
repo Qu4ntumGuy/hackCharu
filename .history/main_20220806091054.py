@@ -176,9 +176,9 @@ class MyGame(arcade.Window):
         if self.Hand_Class.result != self.result_local:
             print(self.Hand_Class.result)
             self.result_local = self.Hand_Class.result
-            if self.Hand_Class.result == 2:
-                if self.physics_engine.can_jump():
-                    self.player_sprite.change_y = JUMP_SPEED
+           
+            if self.physics_engine.can_jump():
+                self.player_sprite.change_y = JUMP_SPEED
 
           
 

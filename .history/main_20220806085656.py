@@ -26,6 +26,7 @@ MOVEMENT_SPEED = 50 * SPRITE_SCALING
 JUMP_SPEED = 20 * SPRITE_SCALING
 GRAVITY = 1* SPRITE_SCALING
 CAMERA_SPEED = 0.1
+TILE_SPRITE_SCALING = 0.5
 
 # Main game class
 class MyGame(arcade.Window):
@@ -84,30 +85,32 @@ class MyGame(arcade.Window):
         #     wall.center_y = 3 * GRID_PIXEL_SIZE
         #     self.static_wall_list.append(wall)
         #     counter += 1
-        counters = 1
+        counter = 1
         # Map creation
-        for i in range(10):            
-            rand = random.randint(80 , 200)
-            # y_rand = counters
-            for o in range(10):
-                countes = 1
-                for i in range(5):
-                    wall = arcade.Sprite(":resources:images/tiles/grassCenter.png", SPRITE_SCALING)
-                    wall.center_x =  10000
-                    wall.center_y = countes * GRID_PIXEL_SIZE
-                    self.static_wall_list.append(wall)
-                    countes += 1
-                y_heights = rand
-            for j in range(rand):
-                wall = arcade.Sprite(":resources:images/tiles/sandMid.png", SPRITE_SCALING)
-                # wall.bottom = 20 * 
-                wall.center_x = (j)*random.randint(2,7)* GRID_PIXEL_SIZE 
-                # wall.center_y = y_heights
-                self.static_wall_list.append(wall)
+        # for i in range(10):            
+        #     for o in range(10): 
+        #         countes = 1
+        #         for i in range(5):
+        #             wall = arcade.Sprite(":resources:images/tiles/grassCenter.png", SPRITE_SCALING)
+        #             wall.center_x =  10000
+        #             wall.center_y = countes * GRID_PIXEL_SIZE
+        #             self.static_wall_list.append(wall)
+        #             countes += 1
+
+
+            rand = random.randint(20 , 40)
+            counter = 20
+          
+            wall = arcade.Sprite(":resources:images/tiles/sandMid.png", repeat_count_x=20)
+
+            wall.center_x =  i*GRID_PIXEL_SIZE + 1000
+            
+            self.static_wall_list.append(wall)
+          
 
 
             # counters+=1
-            counter = counter*random.randint(2, 4)
+            # counter = counter*random.randint(2, 4)
         
         wall = arcade.Sprite(":resources:images/tiles/sandMid.png", SPRITE_SCALING)
         wall.center_y = 3 * GRID_PIXEL_SIZE
@@ -170,15 +173,15 @@ class MyGame(arcade.Window):
                 # time.sleep(1)
         # print()
         if ~self.speed_flag:
-            self.player_sprite.change_x = MOVEMENT_SPEED /8 
+            self.player_sprite.change_x = MOVEMENT_SPEED /5
         # if 
         self.x = self.player_sprite.center_x
         if self.Hand_Class.result != self.result_local:
             print(self.Hand_Class.result)
             self.result_local = self.Hand_Class.result
-            if self.Hand_Class.result == 2:
-                if self.physics_engine.can_jump():
-                    self.player_sprite.change_y = JUMP_SPEED
+           
+            if self.physics_engine.can_jump():
+                self.player_sprite.change_y = JUMP_SPEED
 
           
 
@@ -224,6 +227,35 @@ class MyGame(arcade.Window):
         position = Vec2(self.player_sprite.center_x - self.width / 2,
                         self.player_sprite.center_y - self.height / 2)
         self.camera_sprites.move_to(position, CAMERA_SPEED)
+
+    def load_level(self, level):
+        # layer_options = {"Platforms": {"use_spatial_hash": True}}
+
+        # Read in the tiled map
+        self.tile_map = arcade.load_tilemap(
+            f":resources:tiled_maps/level_{level}.json", scaling=TILE_SPRITE_SCALING
+        )
+
+        # --- Walls ---
+
+        # Calculate the right edge of the my_map in pixels
+        self.end_of_map = self.tile_map.width * GRID_PIXEL_SIZE
+
+        self.physics_engine = arcade.PhysicsEnginePlatformer(
+            self.player_sprite,
+            self.tile_map.sprite_lists["Platforms"],
+            gravity_constant=GRAVITY,
+        )
+
+        # --- Other stuff
+        # Set the background color
+        if self.tile_map.background_color:
+            arcade.set_background_color(self.tile_map.background_color)
+
+        # Set the view port boundaries
+        # These numbers set where we have 'scrolled' to.
+        self.view_left = 0
+        self.view_bottom = 0
 
 
 def main():
